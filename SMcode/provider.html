@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Provider Panel - StudentMarket</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+    body {
+      background-color: #eef6f6;
+      font-family: Arial, sans-serif;
+    }
+
+    .custom-navbar {
+      background-color: #006666;
+      padding: 15px;
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      color: #00ffff !important;
+    }
+
+    .page-title {
+      margin-top: 50px;
+      color: #003333;
+      font-weight: bold;
+    }
+
+    .provider-select-box {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 24px;
+      max-width: 400px;
+    }
+
+    .order-card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 24px;
+    }
+
+    .order-meta {
+      color: #006666;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-done {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .btn-main {
+      background-color: #00ffff;
+      color: #003333;
+      border-radius: 10px;
+      font-weight: bold;
+      border: none;
+    }
+
+    .empty-orders {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 40px;
+      text-align: center;
+      color: #6b7d7d;
+    }
+
+    .form-error {
+      color: #b00020;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">StudentMarket</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-3">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="my-orders.html">My Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="provider.html">Provider Panel</a></li>
+        <li class="nav-item"><a class="nav-link" href="myaccount.html">My Account</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1 class="page-title">Provider Panel</h1>
+  <p class="text-muted mb-4">Select your name to see your orders.</p>
+
+  <div class="provider-select-box mb-4">
+    <label class="form-label fw-bold">Provider</label>
+    <select class="form-select" id="providerSelect">
+      <option value="">-- Select Provider --</option>
+    </select>
+  </div>
+
+  <div id="orders-area"></div>
+
+  <div class="provider-select-box mt-5">
+    <h4 class="mb-3">Add a New Service</h4>
+    <p class="text-muted" style="font-size: 0.9rem;">Select your name above first — the service will be added under that name.</p>
+
+    <form id="addServiceForm" novalidate>
+
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" id="newTitle">
+        <div class="form-error" id="err-title">Please enter a title.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="newCategory">
+          <option value="textbooks">Textbooks</option>
+          <option value="notes">Notes</option>
+          <option value="tutoring">Tutoring</option>
+          <option value="uniforms">Uniforms</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Price (€)</label>
+        <input type="number" step="0.01" min="0" class="form-control" id="newPrice">
+        <div class="form-error" id="err-price">Please enter a valid price.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" id="newDescription" rows="3"></textarea>
+        <div class="form-error" id="err-description">Please enter a description.</div>
+      </div>
+
+      <div class="form-error" id="err-no-provider">Please select your name above first.</div>
+
+      <button type="submit" class="btn btn-main">Add Service</button>
+
+    </form>
+  </div>
+
+</div>
+
+<script src="js/data.js"></script>
+
+<script>
+
+  const select = document.getElementById("providerSelect");
+  const area = document.getElementById("orders-area");
+
+  // Fill dropdown from PROVIDERS in data.js
+  PROVIDERS.forEach(function (name) {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+
+  function renderOrdersFor(providerName) {
+
+    if (!providerName) {
+      area.innerHTML = "";
+      return;
+    }
+
+    const orders = getOrders().filter(function (o) {
+      return o.provider === providerName;
+    });
+
+    if (orders.length === 0) {
+      area.innerHTML = '<div class="empty-orders">No orders for this provider.</div>';
+      return;
+    }
+
+    area.innerHTML = orders.map(function (o) {
+
+      const statusClass = o.status === "Përfunduar" ? "status-done" : "status-pending";
+      const nextStatus = o.status === "Përfunduar" ? "Në pritje" : "Përfunduar";
+
+      return `
+        <div class="order-card mb-3">
+          <span class="order-meta">${o.serviceName}</span>
+          <span class="status-badge ${statusClass} float-end">${o.status}</span>
+          <p class="mb-1">Customer: ${o.buyerName} (${o.buyerEmail})</p>
+          <p class="mb-1">Price: ${o.price}€</p>
+          <p class="mb-1">Date: ${o.date}</p>
+          <p class="mb-3 text-muted">"${o.message}"</p>
+          <button class="btn btn-main btn-sm" onclick="toggleStatus('${o.id}')">
+            Mark as ${nextStatus}
+          </button>
+        </div>
+      `;
+
+    }).join("");
+
+  }
+
+  function toggleStatus(orderId) {
+
+    const orders = getOrders();
+    const order = orders.find(function (o) { return o.id === orderId; });
+
+    if (order) {
+      order.status = order.status === "Përfunduar" ? "Në pritje" : "Përfunduar";
+      saveOrders(orders);
+      renderOrdersFor(select.value);
+    }
+
+  }
+
+  select.addEventListener("change", function () {
+    renderOrdersFor(select.value);
+  });
+
+  document.getElementById("addServiceForm").addEventListener("submit", function (e) {
+
+    e.preventDefault();
+
+    const titleEl = document.getElementById("newTitle");
+    const categoryEl = document.getElementById("newCategory");
+    const priceEl = document.getElementById("newPrice");
+    const descriptionEl = document.getElementById("newDescription");
+
+    function show(id, isValid) {
+      document.getElementById(id).style.display = isValid ? "none" : "block";
+      return isValid;
+    }
+
+    let valid = true;
+    valid = show("err-no-provider", select.value !== "") && valid;
+    valid = show("err-title", titleEl.value.trim() !== "") && valid;
+    valid = show("err-price", priceEl.value !== "" && parseFloat(priceEl.value) >= 0) && valid;
+    valid = show("err-description", descriptionEl.value.trim() !== "") && valid;
+
+    if (!valid) return;
+
+    const newService = {
+      id: generateServiceId(),
+      category: categoryEl.value,
+      name: titleEl.value.trim(),
+      provider: select.value,
+      price: parseFloat(priceEl.value),
+      image: "images/placeholder.png",
+      description: descriptionEl.value.trim()
+    };
+
+    saveCustomService(newService);
+
+    alert("Service added successfully!");
+    document.getElementById("addServiceForm").reset();
+
+  });
+
+</script>
+
+</body>
+</html>

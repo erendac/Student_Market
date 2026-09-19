@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - StudentMarket</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+    body {
+      background-color: #eef6f6;
+      font-family: Arial, sans-serif;
+    }
+
+    .custom-navbar {
+      background-color: #006666;
+      padding: 15px;
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      color: #00ffff !important;
+    }
+
+    .btn-main {
+      background-color: #00ffff;
+      color: #003333;
+      border-radius: 10px;
+      font-weight: bold;
+      border: none;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .auth-card {
+      max-width: 440px;
+      margin: 60px auto;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 36px;
+    }
+
+    .auth-card h2 {
+      color: #003333;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .auth-card p.sub {
+      color: #6b7d7d;
+      margin-bottom: 24px;
+    }
+
+    .form-error {
+      color: #b00020;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .switch-link {
+      text-align: center;
+      margin-top: 18px;
+      color: #6b7d7d;
+    }
+
+    .switch-link a {
+      color: #006666;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">StudentMarket</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-3">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="auth-card">
+
+    <h2>Create Account</h2>
+    <p class="sub">Sign up to place orders on StudentMarket.</p>
+
+    <form id="signupForm" novalidate>
+
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" id="signupUsername">
+        <div class="form-error" id="err-username">Please enter your name.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" id="signupEmail">
+        <div class="form-error" id="err-email">Please enter a valid email.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">School</label>
+        <input type="text" class="form-control" id="signupSchool">
+        <div class="form-error" id="err-school">Please enter your school.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" id="signupPassword">
+        <div class="form-error" id="err-password">Password must be at least 4 characters.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="signupPasswordConfirm">
+        <div class="form-error" id="err-password-confirm">Passwords do not match.</div>
+      </div>
+
+      <div class="form-error" id="err-exists">This email is already in use.</div>
+
+      <button type="submit" class="btn btn-main mt-2">Sign Up</button>
+
+    </form>
+
+    <p class="switch-link">Already have an account? <a href="login.html">Log in here</a></p>
+
+  </div>
+</div>
+
+<script>
+
+  document.getElementById("signupForm").addEventListener("submit", function (e) {
+
+    e.preventDefault();
+
+    const usernameEl = document.getElementById("signupUsername");
+    const emailEl = document.getElementById("signupEmail");
+    const schoolEl = document.getElementById("signupSchool");
+    const passwordEl = document.getElementById("signupPassword");
+    const confirmEl = document.getElementById("signupPasswordConfirm");
+
+    function show(id, isValid) {
+      document.getElementById(id).style.display = isValid ? "none" : "block";
+      return isValid;
+    }
+
+    document.getElementById("err-exists").style.display = "none";
+
+    let valid = true;
+    valid = show("err-username", usernameEl.value.trim() !== "") && valid;
+    valid = show("err-email", emailEl.value.trim() !== "" && emailEl.value.includes("@")) && valid;
+    valid = show("err-school", schoolEl.value.trim() !== "") && valid;
+    valid = show("err-password", passwordEl.value.length >= 4) && valid;
+    valid = show("err-password-confirm", confirmEl.value === passwordEl.value && passwordEl.value !== "") && valid;
+
+    if (!valid) return;
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const email = emailEl.value.trim().toLowerCase();
+
+    if (users.some(function (u) { return u.email === email; })) {
+      document.getElementById("err-exists").style.display = "block";
+      return;
+    }
+
+    users.push({
+      username: usernameEl.value.trim(),
+      email: email,
+      school: schoolEl.value.trim(),
+      password: passwordEl.value
+    });
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    // Auto-login after signup
+    localStorage.setItem("username", usernameEl.value.trim());
+    localStorage.setItem("email", email);
+    localStorage.setItem("school", schoolEl.value.trim());
+
+    window.location.href = "myaccount.html";
+
+  });
+
+</script>
+
+</body>
+</html>

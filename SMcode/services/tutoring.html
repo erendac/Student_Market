@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutoring - StudentMarket</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+    body {
+      background-color: #eef6f6;
+      font-family: Arial, sans-serif;
+    }
+
+    .custom-navbar {
+      background-color: #006666;
+      padding: 15px;
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      color: #00ffff !important;
+    }
+
+    .btn-main {
+      background-color: #00ffff;
+      color: #003333;
+      border-radius: 10px;
+      font-weight: bold;
+      padding: 8px 18px;
+      text-decoration: none;
+      border: none;
+    }
+
+    .page-title {
+      margin-top: 50px;
+      color: #003333;
+      font-weight: bold;
+    }
+
+    .tutoring-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      height: 100%;
+    }
+
+    .tutoring-card img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">StudentMarket</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-3">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="my-orders.html">My Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="provider.html">Provider Panel</a></li>
+        <li class="nav-item"><a class="nav-link" href="myaccount.html">My Account</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- PAGE CONTENT -->
+<div class="container">
+
+  <h1 class="page-title">Tutoring Services</h1>
+
+  <p class="text-muted mb-4">
+    Find students offering tutoring in different subjects.
+  </p>
+
+  <div class="row g-4">
+
+    <!-- CARD 1 -->
+    <div class="col-md-4">
+      <div class="card tutoring-card">
+
+        <img src="../images/tutoring2.jpg" alt="Math Tutoring">
+
+        <div class="card-body">
+
+          <h5>Junior Year Math</h5>
+          <p class="text-muted">Tutor: Blerim </p>
+          <p>Price: 30€/hour</p>
+
+          <a class="btn btn-main mt-2" href="../details.html?id=tutoring-math">
+            Details
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="col-md-4">
+      <div class="card tutoring-card">
+
+        <img src="../images/tutoring3.jpg" alt="Biology Tutoring">
+
+        <div class="card-body">
+
+          <h5>8th Grade Chemistry</h5>
+          <p class="text-muted">Tutor: Flora</p>
+          <p>Price: 15€/hour</p>
+
+          <a class="btn btn-main mt-2" href="../details.html?id=tutoring-chemistry">
+            Details
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="col-md-4">
+      <div class="card tutoring-card">
+
+        <img src="../images/tutoring4.jpg" alt="English Tutoring">
+
+        <div class="card-body">
+
+          <h5>College Level English</h5>
+          <p class="text-muted">Tutor: Leon</p>
+          <p>Price: 30€/hour</p>
+
+          <a class="btn btn-main mt-2" href="../details.html?id=tutoring-english">
+            Details
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

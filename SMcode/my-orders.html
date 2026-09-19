@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders - StudentMarket</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+    body {
+      background-color: #eef6f6;
+      font-family: Arial, sans-serif;
+    }
+
+    .custom-navbar {
+      background-color: #006666;
+      padding: 15px;
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: white !important;
+    }
+
+    .nav-link:hover {
+      color: #00ffff !important;
+    }
+
+    .page-title {
+      margin-top: 50px;
+      color: #003333;
+      font-weight: bold;
+    }
+
+    .order-card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 24px;
+    }
+
+    .order-meta {
+      color: #006666;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-done {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .empty-orders {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 40px;
+      text-align: center;
+      color: #6b7d7d;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">StudentMarket</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-3">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="my-orders.html">My Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="provider.html">Provider Panel</a></li>
+        <li class="nav-item"><a class="nav-link" href="myaccount.html">My Account</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1 class="page-title">My Orders</h1>
+  <p class="text-muted mb-4">Your orders, based on the email you used.</p>
+
+  <div id="orders-area"></div>
+
+</div>
+
+<script src="js/data.js"></script>
+
+<script>
+
+  const email = localStorage.getItem("email");
+  const area = document.getElementById("orders-area");
+
+  if (!email) {
+
+    area.innerHTML = '<div class="empty-orders">You don\'t have any orders yet. Place an order from the Services page.</div>';
+
+  } else {
+
+    const myOrders = getOrders().filter(function (o) {
+      return o.buyerEmail === email;
+    });
+
+    if (myOrders.length === 0) {
+
+      area.innerHTML = '<div class="empty-orders">You don\'t have any orders.</div>';
+
+    } else {
+
+      area.innerHTML = myOrders.map(function (o) {
+
+        const statusClass = o.status === "Përfunduar" ? "status-done" : "status-pending";
+
+        return `
+          <div class="order-card mb-3">
+            <span class="order-meta">${o.serviceName}</span>
+            <span class="status-badge ${statusClass} float-end">${o.status}</span>
+            <p class="mb-1">Provider: ${o.provider}</p>
+            <p class="mb-1">Price: ${o.price}€</p>
+            <p class="mb-1">Date: ${o.date}</p>
+            <p class="mb-0 text-muted">"${o.message}"</p>
+          </div>
+        `;
+
+      }).join("");
+
+    }
+
+  }
+
+</script>
+
+</body>
+</html>
